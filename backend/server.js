@@ -19,7 +19,12 @@ const app = express();
 // 🔥 CONNECT DATABASE
 connectDB();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://techkart-f8ef7.web.app"],
+    credentials: true,
+  }),
+);
 app.use(express.json());
 
 // 🌍 TEST ROUTE
@@ -47,8 +52,6 @@ app.use("/api/support", supportRoutes);
 
 const PORT = process.env.PORT || 2001;
 
-app.listen(PORT, () =>
-  console.log(`Server running on ${PORT}`)
-);
+app.listen(PORT, () => console.log(`Server running on ${PORT}`));
 
 app.use("/api/wishlist", wishlistRoutes);
