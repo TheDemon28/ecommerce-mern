@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Mail, User, Trash2 } from "lucide-react";
-
-const API = axios.create({
-  baseURL: "http://localhost:2001/api",
-});
+import API from "../services/api";
 
 export default function AdminSupport() {
   const [messages, setMessages] = useState([]);
@@ -47,7 +43,7 @@ export default function AdminSupport() {
       });
 
       setMessages(messages.filter((msg) => msg._id !== id));
-    } catch (error) {
+    } catch {
       alert("Failed to delete message");
     }
   };

@@ -1,10 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-
-const API = axios.create({
-  baseURL: "http://localhost:2001/api",
-});
+import API from "../services/api";
 
 export default function Signup() {
   const navigate = useNavigate();

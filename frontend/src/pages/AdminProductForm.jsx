@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
-
-const API = axios.create({
-  baseURL: "http://localhost:2001/api",
-});
+import API from "../services/api";
 
 export default function AdminProductForm() {
   const { id } = useParams();
@@ -42,7 +38,7 @@ export default function AdminProductForm() {
           image: data.image || "",
           description: data.description || "",
         });
-      } catch (err) {
+      } catch {
         setError("Failed to load product");
       }
     };

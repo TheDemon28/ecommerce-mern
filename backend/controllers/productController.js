@@ -1,5 +1,8 @@
 const Product = require("../models/Product");
 
+const escapeRegex = (value = "") =>
+  value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 // 🔥 GET ALL PRODUCTS
 const getProducts = async (req, res) => {
   try {
@@ -10,16 +13,18 @@ const getProducts = async (req, res) => {
 
     // Search by product name or category
     if (req.query.keyword) {
+      const keyword = escapeRegex(req.query.keyword.trim());
+
       filter.$or = [
         {
           name: {
-            $regex: req.query.keyword,
+            $regex: keyword,
             $options: "i",
           },
         },
         {
           category: {
-            $regex: req.query.keyword,
+            $regex: keyword,
             $options: "i",
           },
         },
@@ -28,8 +33,10 @@ const getProducts = async (req, res) => {
 
     // Category filter from category cards
     if (req.query.category) {
+      const category = escapeRegex(req.query.category.trim());
+
       filter.category = {
-        $regex: `^${req.query.category}$`,
+        $regex: `^${category}$`,
         $options: "i",
       };
     }
@@ -45,12 +52,17 @@ const getProducts = async (req, res) => {
       sortOption = { rating: -1 };
     }
 
-    const count = await Product.countDocuments(filter);
-
-    const products = await Product.find(filter)
-      .sort(sortOption)
-      .limit(pageSize)
-      .skip(pageSize * (page - 1));
+    const [count, products] = await Promise.all([
+      Product.countDocuments(filter),
+      Product.find(filter)
+        .select(
+          "name price image brand category countInStock rating numReviews createdAt"
+        )
+        .sort(sortOption)
+        .limit(pageSize)
+        .skip(pageSize * (page - 1))
+        .lean(),
+    ]);
 
     res.json({
       products,

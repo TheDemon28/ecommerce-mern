@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import { Plus, Pencil, Trash2 } from "lucide-react";
-
-const API = axios.create({
-  baseURL: "http://localhost:2001/api",
-});
+import API from "../services/api";
 
 export default function AdminProducts() {
   const [products, setProducts] = useState([]);

@@ -5,7 +5,11 @@ const connectDB = async () => {
     console.log("🔗 Attempting to connect to MongoDB...");
     console.log("URI: ", process.env.MONGO_URI?.split("@")[0] + "@***"); // Hide credentials in log
     
-    const conn = await mongoose.connect(process.env.MONGO_URI);
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
+    });
 
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
